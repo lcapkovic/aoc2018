@@ -8,11 +8,6 @@
 
 using namespace std;
 
-struct node {
-    vector<int> meta;
-    vector<node*> children;
-};
-
 int addMeta(vector<int> *data, int *startIx) {
     if (*startIx >= data->size()-1) return 0;
 
