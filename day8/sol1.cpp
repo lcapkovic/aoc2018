@@ -8,37 +8,36 @@
 
 using namespace std;
 
-int addMeta(vector<int> *data, int *startIx) {
-    if (*startIx >= data->size()-1) return 0;
+int addMeta(vector<int> *data, int *ix) {
+    if (*ix >= data->size()-1) return 0;
 
-    int num_children = data->at(*startIx);
-    int num_meta = data->at(*startIx+1);
+    int num_children = data->at(*ix);
+    int num_meta = data->at(*ix+1);
 
     int metaSum = 0;
-    int tempIx = *startIx+2;
+    *ix += 2;
     for (int i = 0; i < num_children; i++){
-        metaSum += addMeta(data, &tempIx);
+
+        metaSum += addMeta(data, ix);
     }
 
     for (int i = 0; i < num_meta; i++){
-        metaSum += data->at(tempIx);
-        tempIx++;
+        metaSum += data->at(*ix);
+        (*ix)++;
     }
-    *startIx = tempIx;
     return metaSum;
 }
 
-int value(vector<int> *data, int *startIx) { 
-    if (*startIx >= data->size()-1) return 0;
+int value(vector<int> *data, int *ix) { 
+    if (*ix >= data->size()-1) return 0;
 
-    int num_children = data->at(*startIx);
-    int num_meta = data->at(*startIx+1);
+    int num_children = data->at(*ix);
+    int num_meta = data->at(*ix+1);
 
-    int tempIx = *startIx+2;
-
+    *ix += 2;
     vector<int> childVals;
     for (int i = 0; i < num_children; i++){
-        childVals.push_back(value(data, &tempIx));
+        childVals.push_back(value(data, ix));
     }
 
     int valSum = 0;
@@ -46,19 +45,17 @@ int value(vector<int> *data, int *startIx) {
     if (num_children == 0) {
         // sum up metadata vals
         for (int i = 0; i < num_meta; i++){
-            valSum += data->at(tempIx);
-            tempIx++;
+            valSum += data->at(*ix);
+            (*ix)++;
         }
     } else {
         // sum up children vals at metadata indices - 1
         for (int i = 0; i < num_meta; i++){
-            if (data->at(tempIx) > 0 && data->at(tempIx) <= num_children)
-                valSum += childVals[data->at(tempIx)-1];
-            tempIx++;
+            if (data->at(*ix) > 0 && data->at(*ix) <= num_children)
+                valSum += childVals[data->at(*ix)-1];
+            (*ix)++;
         }
     }
-
-    *startIx = tempIx;
     return valSum;
 }
 
